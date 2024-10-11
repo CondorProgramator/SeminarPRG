@@ -8,8 +8,15 @@ namespace Kalkulacka
 {
     internal class Program
     {
+
+        static void Writenumber()
+        {
+
+
+        }
         static void Main(string[] args)
         {
+         
             int vysledek = 0;
             Console.WriteLine("Zadej prvni číslo");
             string prvni = Console.ReadLine();
@@ -20,8 +27,28 @@ namespace Kalkulacka
             int druha = int.Parse(druhy);
 
             Console.WriteLine("Napis soucet nebo rozdil nebo krat");
-            string operace = Console.ReadLine();
-            
+            string operace = Console.ReadLine();r
+
+            switch (operace)
+            {
+                case "soucet":
+                    vysledek = prva + druha;
+                    break;
+                case "rozdil":
+                    vysledek = prva - druha;
+                    break;
+                case "nasobek":
+                    vysledek = prva * druha;
+                    break;
+
+                
+
+                default:
+                    break;
+            }
+           
+
+
             if (operace == "soucet") 
             {
                  vysledek = prva + druha;
@@ -39,6 +66,8 @@ namespace Kalkulacka
                 Console.WriteLine("neplatny input");
             }
                 Console.WriteLine ($"vysledek je {vysledek} ");
+
+
 
             Console.ReadKey();
 
