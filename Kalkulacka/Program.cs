@@ -16,59 +16,62 @@ namespace Kalkulacka
         }
         static void Main(string[] args)
         {
-         
-            int vysledek = 0;
-            Console.WriteLine("Zadej prvni číslo");
-            string prvni = Console.ReadLine();
-            int prva = int.Parse(prvni);            
-
-            Console.WriteLine("Zadej druhe číslo");
-            string druhy = Console.ReadLine();
-            int druha = int.Parse(druhy);
-
-            Console.WriteLine("Napis soucet nebo rozdil nebo krat");
-            string operace = Console.ReadLine();r
-
-            switch (operace)
+            while (true)
             {
-                case "soucet":
-                    vysledek = prva + druha;
-                    break;
-                case "rozdil":
-                    vysledek = prva - druha;
-                    break;
-                case "nasobek":
-                    vysledek = prva * druha;
-                    break;
-
+            
                 
-
-                default:
-                    break;
-            }
-           
-
-
-            if (operace == "soucet") 
+            try
             {
-                 vysledek = prva + druha;
-            }
-            if (operace == "rozdil")
-            {
-                 vysledek = prva - druha;
-            }
-            if (operace == "krat")
-            {
-                vysledek = prva * druha;
-            }
-            else
-            {
-                Console.WriteLine("neplatny input");
-            }
-                Console.WriteLine ($"vysledek je {vysledek} ");
+                int kontrolka = 0;
+                int vysledek = 0;
+
+                Console.WriteLine("Zadej prvni číslo");
+                string prvni = Console.ReadLine();
+                int prva = int.Parse(prvni);
+
+                Console.WriteLine("Zadej druhe číslo");
+                string druhy = Console.ReadLine();
+                int druha = int.Parse(druhy);
+
+                Console.WriteLine("Napis + nebo - nebo * nebo / ");
+                string operace = Console.ReadLine();
+
+                switch (operace)
+                {
+                    case "+":
+                        vysledek = prva + druha;
+                        kontrolka++;
+                        break;
+
+                    case "-":
+                        vysledek = prva - druha;
+                        kontrolka++;
+                        break;
+
+                    case "*":
+                        vysledek = prva * druha;
+                        kontrolka++;
+                        break;
+
+                    case "/":
+                        vysledek = prva / druha;
+                        kontrolka++;
+                        break;
 
 
+                    default:
+                        
+                        break;
 
+                }
+
+                Console.WriteLine($"vysledek je {vysledek} ");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("neplatny input");                        
+            }
+            }
             Console.ReadKey();
 
 
