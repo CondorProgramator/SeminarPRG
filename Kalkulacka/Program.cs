@@ -22,7 +22,7 @@ namespace Kalkulacka
                 
             try
             {
-                int kontrolka = 0;
+               
                 int vysledek = 0;
 
                 Console.WriteLine("Zadej prvni číslo");
