@@ -15,6 +15,7 @@ namespace Deathroll
     {
         static void Main(string[] args)
         {
+
             /*
              * Jednoduchy program na procviceni podminek a cyklu (lze udelat i rekurzi).
              * 
@@ -26,8 +27,8 @@ namespace Deathroll
              * Ukazka hry: Hraci se shodnou na cisle 1000. Prvni hrac rollne 1-1000, padne mu 920. Druhy hrac rolluje 1-920, padne mu 235 atd. atd. az jednomu z hracu padne 1
              * a ten prohrava.
              * 
-             * Struktura:
-             * 
+             * Struktura: 
+
              * - nadefinuj promenne, ktere budes potrebovat po celou dobu hry, tedy aktualne rollovane cislo a stav "goldu" uzivatele i pocitace (oba zacinaji treba s 1000 goldu)
              * 
              * - uzivatel zada prvotni sazku, ktera musi byt maximalne tolik, kolik ma goldu
@@ -55,6 +56,45 @@ namespace Deathroll
              * ROZSIRENI:
              * - umozni uzivateli opakovat deathroll dokud ma nejake goldy
              */
+            int wallet = 1000;
+            int bet = 0;
+            int comp = 0;
+            Console.WriteLine("Zadej, kolik chceš vsadit goldů. Aktuální zůstatek " + wallet);            
+            try
+                {
+                    string input = Console.ReadLine();
+                    comp = int.Parse(input);
+                }
+                catch(FormatException) 
+                {
+                    Console.WriteLine("Neplatný input");
+                    return;
+                }            
+            while (bet != 1 || comp !=1 )             
+            {
+                Random rnd = new Random();
+                int betano = rnd.Next(1, comp);
+                Console.WriteLine("Ty "+betano);
+                Console.ReadKey();
+
+                Random rnd2 = new Random();
+                comp = rnd2.Next(1, betano);
+                Console.WriteLine("On "+comp);
+                Console.ReadKey();
+            }
+
+            if (bet == 1)
+            {
+                Console.WriteLine("Prhrál jsi. Padle ti " + bet);
+            }
+
+            else 
+            {
+                Console.WriteLine("Vyhrál jsi. Soupeřovi padlo" + comp);
+            }
+
+            Console.ReadKey();
         }
     }
 }
+

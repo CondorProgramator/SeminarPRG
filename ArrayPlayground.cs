@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,11 +85,28 @@ namespace ArrayPlayground
 
 
                 //TODO 8: Přepiš pole na úplně nové tak, že bude obsahovat 100 náhodně vygenerovaných čísel od 0 do 9.
-                Random rng = new Random();
 
+
+                Random rng = new Random();
+                int[] array = new int[100];
+
+                for (int i = 0; i < 100; i++)
+                {
+                    array[i] = rng.Next(0,10);               
+                }   
+            Console.WriteLine("počet členů je "+array.Length+" a třicátý člen je " + array[30] );
+            
 
             //TODO 9: Spočítej kolikrát se každé číslo v poli vyskytuje a spočítané četnosti vypiš do konzole.
             int[] counts = new int[10];
+            switch (switch_on)
+            {
+                case
+                default:
+            }
+
+
+
 
             //TODO 10: Vytvoř druhé pole, do kterého zkopíruješ prvky z prvního pole v opačném pořadí.
 

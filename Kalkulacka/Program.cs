@@ -24,7 +24,7 @@ namespace Kalkulacka
             {
                
                 int vysledek = 0;
-
+                int kontrolka = 0;
                 Console.WriteLine("Zadej prvni číslo");
                 string prvni = Console.ReadLine();
                 int prva = int.Parse(prvni);
