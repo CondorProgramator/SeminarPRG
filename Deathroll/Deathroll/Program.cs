@@ -57,10 +57,11 @@ namespace Deathroll
              * - umozni uzivateli opakovat deathroll dokud ma nejake goldy
              */
             int wallet = 1000;
-            int bet = 0;
+            int betano = 0;
             int comp = 0;
             Console.WriteLine("Zadej, kolik chceš vsadit goldů. Aktuální zůstatek " + wallet);            
             try
+
                 {
                     string input = Console.ReadLine();
                     comp = int.Parse(input);
@@ -69,13 +70,18 @@ namespace Deathroll
                 {
                     Console.WriteLine("Neplatný input");
                     return;
-                }            
-            while (bet != 1 || comp !=1 )             
+                }
+
+            Random rnd = new Random();
+            while (betano != 1 && comp != 1 )             
             {
-                Random rnd = new Random();
-                int betano = rnd.Next(1, comp);
+                betano = rnd.Next(1, comp);
                 Console.WriteLine("Ty "+betano);
                 Console.ReadKey();
+                if (betano == 1 )
+                {
+                    break;
+                }
 
                 Random rnd2 = new Random();
                 comp = rnd2.Next(1, betano);
@@ -83,9 +89,9 @@ namespace Deathroll
                 Console.ReadKey();
             }
 
-            if (bet == 1)
+            if (betano == 1)
             {
-                Console.WriteLine("Prhrál jsi. Padle ti " + bet);
+                Console.WriteLine("Prhrál jsi. Padle ti " + betano);
             }
 
             else 
