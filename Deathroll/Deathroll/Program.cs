@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,47 +60,69 @@ namespace Deathroll
             int wallet = 1000;
             int betano = 0;
             int comp = 0;
-            Console.WriteLine("Zadej, kolik chceš vsadit goldů. Aktuální zůstatek " + wallet);            
-            try
+            int money = 0;
+
+            Console.WriteLine("DEATHROLL");
+            while (true)
+            {
+                Console.WriteLine("Kolik vsadíš? Aktuální zůstatek " + wallet);
+                try
+
 
                 {
                     string input = Console.ReadLine();
+                    money = int.Parse(input);
                     comp = int.Parse(input);
+                    if (comp > wallet)
+                    {
+                        Console.WriteLine("Nemáš tolik peněz. Jsi diskvalifikován");
+                        Console.ReadKey();
+                        return;
+                    }
                 }
-                catch(FormatException) 
+                catch (FormatException)
                 {
                     Console.WriteLine("Neplatný input");
                     return;
                 }
 
-            Random rnd = new Random();
-            while (betano != 1 && comp != 1 )             
-            {
-                betano = rnd.Next(1, comp);
-                Console.WriteLine("Ty "+betano);
-                Console.ReadKey();
-                if (betano == 1 )
+                Random rnd = new Random();
+                while (betano != 1 && comp != 1)
                 {
-                    break;
+                    betano = rnd.Next(1, comp);
+                    Console.WriteLine("Ty " + betano);
+                    Console.ReadKey();
+                    if (betano == 1)
+                    {
+                        break;
+                    }
+
+                    Random rnd2 = new Random();
+                    comp = rnd2.Next(1, betano);
+                    Console.WriteLine("On " + comp);
+                    Console.ReadKey();
                 }
 
-                Random rnd2 = new Random();
-                comp = rnd2.Next(1, betano);
-                Console.WriteLine("On "+comp);
+                if (betano == 1)
+                {
+                    Console.WriteLine("Prhrál jsi. Padle ti " + betano + "    (-" + money + ")");
+                    wallet = wallet-money;
+                }
+
+                else
+                {
+                    Console.WriteLine("Vyhrál jsi. Soupeřovi padlo " + comp + "    (+" + money + ")");
+                    wallet = wallet+money;
+                }
+
+                Console.ReadKey();
+
+               
+
+                continue;
+
                 Console.ReadKey();
             }
-
-            if (betano == 1)
-            {
-                Console.WriteLine("Prhrál jsi. Padle ti " + betano);
-            }
-
-            else 
-            {
-                Console.WriteLine("Vyhrál jsi. Soupeřovi padlo" + comp);
-            }
-
-            Console.ReadKey();
         }
     }
 }
