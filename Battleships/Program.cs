@@ -44,6 +44,8 @@ namespace Battleships
 
     static void ChoseShip(int[,] arrayToShip)
     {
+        checkpoint:
+            
         Console.WriteLine("Zvol si řádek, kam si dáš loď");
         string column = Console.ReadLine();
         int vertical = int.Parse(column);
@@ -58,17 +60,21 @@ namespace Battleships
         string rot = Console.ReadLine().ToLower();
 
             // KONTROLA, JESTLI SE LOĎ VEJDE DO POLE // 
+            
+            
             if (rot == "v" && vertical + 2 >= arrayToShip.GetLength(0))
             {
                 Console.WriteLine("Tvoje loď sahá mimo pole");
                 Console.ReadKey();
+                goto checkpoint;
                 return;
             }
-
+            
             if (rot == "h" && horizontal + 2 >= arrayToShip.GetLength(1))
             {
                 Console.WriteLine("Tvoje loď sahá mimo pole");
                 Console.ReadKey();
+                goto checkpoint;
                 return;
             }
 
