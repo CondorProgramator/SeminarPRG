@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Battleships
+namespace RealBattleShip
 {
     internal class Program
     {
 
-
+        // Nakreslení pole
 
         static void DrawField(int[,] arrayToPrint)
         {
@@ -17,239 +18,253 @@ namespace Battleships
             {
                 for (int j = 0; j < arrayToPrint.GetLength(1); j++)
                 {
-                    // Vyměním symbol 3 čtverečkem
+                    // Vyměním číslo znakem
                     if (arrayToPrint[i, j] == 3)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("(3)"); 
+                        Console.Write("(3)");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
-                    if (arrayToPrint[i, j] == 2)
-                    { 
-                        Console.Write("(L)"); // udělám si pole
+                    else if (arrayToPrint[i, j] == 2)
+                    {
+                        Console.Write("(2)"); // Udělám si pole
                     }
-                    if (arrayToPrint[i, j] == 0)
+                    else if (arrayToPrint[i, j] == 5)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write("[X]");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else if (arrayToPrint[i, j] == 6)
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("[O]");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else if (arrayToPrint[i, j] == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.Write("[ ]");
-                        Console.ForegroundColor= ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
-                        
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine("-------------------------------");
         }
 
-        static void SetArraytoDefault(int[,] arrayToSet, int[,] arrayPC)
-    {
-        for (int i = 0; i < arrayToSet.GetLength(0); i++)
+        // Funkce na založení pole
+        static void SetArrayToDefault(int[,] arrayToSet, int[,] arrayPC, int[,] arrayShadow)
         {
-            for (int j = 0; j < arrayToSet.GetLength(1); j++)
+            for (int i = 0; i < arrayToSet.GetLength(0); i++)
             {
-                arrayToSet[i, j] = 0;
-                arrayPC[i, j] = 0;
-            }
-        }
-    }
-
-
-        static void ChoseShip(int[,] arrayToShip)
-        {
-        checkpoint:
-
-            Console.WriteLine("Zvol si řádek, kam si dáš loď 3*1 (0-8)");
-            string column = Console.ReadLine();
-            int vertical = int.Parse(column);
-
-            Console.WriteLine("Zvol si sloupec, kam dáš svou loď 3*1 (0-8)");
-            string row = Console.ReadLine();
-            int horizontal = int.Parse(row);
-
-
-
-            Console.WriteLine("vertikálně, nebo horizontálně? (v/h)");
-            string rot = Console.ReadLine().ToLower();
-
-            // Automatická úprava souřadnic, aby se loď vešla do pole
-            if (rot == "v")
-            {
-                // Pokud loď přesahuje dolní hranici
-                if (vertical + 2 >= arrayToShip.GetLength(0))
+                for (int j = 0; j < arrayToSet.GetLength(1); j++)
                 {
-                    vertical = arrayToShip.GetLength(0) - 3;
+                    arrayToSet[i, j] = 0;
+                    arrayPC[i, j] = 0;
+                    arrayShadow[i, j] = 0;
                 }
             }
-            else if (rot == "h")
+        }
+
+
+        static bool CanPlaceShip(int[,] array, int x, int y, int length, bool isHorizontal)
+        {
+            if (isHorizontal)
             {
-                // Pokud loď přesahuje pravou hranici
-                if (horizontal + 2 >= arrayToShip.GetLength(1))
+                if (y + length > array.GetLength(1)) return false; // Přesahuje hranice
+
+                for (int j = 0; j < length; j++)
                 {
-                    horizontal = arrayToShip.GetLength(1) - 3;
+                    if (array[x, y + j] != 0) return false; // Překrývá jinou loď
                 }
             }
             else
             {
-                Console.WriteLine("Neplatný vstup, zkus to znovu.");
-                goto checkpoint;
-            }
+                if (x + length > array.GetLength(0)) return false; // Přesahuje hranice
 
-            // Kontrola, zda je zvolený prostor volný
-            for (int i = 0; i < 3; i++)
-            {
-                if (rot == "v" && arrayToShip[vertical + i, horizontal] != 0)
+                for (int i = 0; i < length; i++)
                 {
-                    Console.WriteLine("Tato oblast už obsahuje loď. Zkus jiné místo.");
-                    goto checkpoint;
-                }
-                else if (rot == "h" && arrayToShip[vertical, horizontal + i] != 0)
-                {
-                    Console.WriteLine("Tato oblast už obsahuje loď. Zkus jiné místo.");
-                    goto checkpoint;
+                    if (array[x + i, y] != 0) return false; // Překrývá jinou loď
                 }
             }
 
-            // Umístění lodi
-            switch (rot)
-            {
-                case "v":
-                    for (int i = 0; i < 3; i++)
-                    {
-                        arrayToShip[vertical + i, horizontal] = 3;
-                    }
-                    break;
-
-                case "h":
-                    for (int i = 0; i < 3; i++)
-                    {
-                        arrayToShip[vertical, horizontal + i] = 3;
-                    }
-                    break;
-
-                default:
-                    Console.WriteLine("Neplatný vstup, zkus to znovu.");
-                    goto checkpoint;
-            }
+            return true;
         }
 
-        static void ChoseLShip(int[,] arrayToShip) // výběr L lodě
+        // Funkce pro umístění lodi
+        static void PlaceShip(int[,] array, int x, int y, int length, bool isHorizontal)
         {
-        checkpoint:
-
-            Console.WriteLine("Zvol si řádek, kam si dáš střed lodě ve tvaru L (0-8)");
-            string column = Console.ReadLine();
-            int vertical = int.Parse(column);
-
-            Console.WriteLine("Zvol si sloupec, kam dáš střed lodě ve tvaru L(0-8)");
-            string row = Console.ReadLine();
-            int horizontal = int.Parse(row);
-
-
-
-            Console.WriteLine("vertikálně, nebo horizontálně? (v/h)");
-            string rot = Console.ReadLine().ToLower();
-
-            // Automatická úprava souřadnic, aby se loď vešla do pole
-            if (rot == "v")
+            if (isHorizontal)
             {
-                // Pokud loď přesahuje dolní hranici
-                if (vertical + 2 >= arrayToShip.GetLength(0))
+                for (int j = 0; j < length; j++)
                 {
-                    vertical = arrayToShip.GetLength(0) - 3;
-                }
-            }
-            else if (rot == "h")
-            {
-                // Pokud loď přesahuje pravou hranici
-                if (vertical - 2 >= arrayToShip.GetLength(1))
-                {
-                    vertical = arrayToShip.GetLength(1) - 3;
+                    array[x, y + j] = 3;
                 }
             }
             else
             {
-                Console.WriteLine("Neplatný vstup, zkus to znovu.");
-                goto checkpoint;
-            }
-
-            // Kontrola, zda je zvolený prostor volný
-            for (int i = 0; i < 3; i++)
-            {
-                if (rot == "v" && arrayToShip[vertical + i, horizontal] != 0)
+                for (int i = 0; i < length; i++)
                 {
-                    Console.WriteLine("Tato oblast už obsahuje loď. Zkus jiné místo.");
-                    goto checkpoint;
+                    array[x + i, y] = 3;
                 }
-                else if (rot == "h" && arrayToShip[vertical, horizontal + i] != 0)
-                {
-                    Console.WriteLine("Tato oblast už obsahuje loď. Zkus jiné místo.");
-                    goto checkpoint;
-                }
-            }
-
-            // Umístění lodi
-            switch (rot)
-            {
-                case "v":
-                    for (int i = 0; i < 3; i++)
-                    {
-                        arrayToShip[vertical + i, horizontal] = 2;
-                    }
-                    for (int j = 0; j < 3; j++)
-                    {
-                        arrayToShip[vertical, horizontal + j] = 2;
-                    }
-                    
-                    break;
-
-                case "h":
-                    for (int i = 0; i < 3; i++)
-                    {
-                        arrayToShip[vertical, horizontal + i] = 2;
-                    }
-                    for (int j = 0; j < 3; j++)
-                    {
-                        arrayToShip[vertical + j, horizontal] = 2;
-                    }
-                    break;
-
-                default:
-                    Console.WriteLine("Neplatný vstup, zkus to znovu.");
-                    goto checkpoint;
             }
         }
 
+        static void Place3Ships(int[,] array, bool rot, int x, int y)
+        {
+            Random rnd = new Random();
+            for (int i = 0; i < 3; i++)
+            {
+                bool placed = false;
+
+                while (!placed)
+                {
+                    rot = rnd.Next(0, 2) == 1; // Horizontální (true) nebo vertikální (false)
+                    x = rnd.Next(0, 10);
+                    y = rnd.Next(0, 10);
 
 
-        static void Main(string[] args)
-            {           
-            Random rnd = new Random();   
-            int[,] array = new int[10,10];
-            int[,] pcArray = new int[10,10];
-            SetArraytoDefault(array, pcArray); // založení pole
-            DrawField(array);// nakreslení pole
-            //ChoseLShip(array);
-            //DrawField(array);
-            ChoseShip(array); // vybrání lodě        
-            DrawField(array);// nakreslení pole s lodí
-            ChoseShip(array); // vybrání lodě        
-            DrawField(array);// nakreslení pole s lodí
+                    if (CanPlaceShip(array, x, y, 3, rot))
+                    {
+                        PlaceShip(array, x, y, 3, rot);
 
 
+
+                        placed = true;
+                    }
+                }
+            }
+        }
+        static bool CheckArray(int[,] array)
+        {
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+
+                    if (array[i, j] == 3)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
+        static void playerShoot(int[,] arrayPC,int [,]arrayShadow, string vertical, string horizontal, int col, int row)
+        {
             while (true)
             {
-                int rot = rnd.Next(0,2);
-                int x = rnd.Next(0,9);
-                int y = rnd.Next(0,9);
+
+
+
+                while (true)
+                {
+                    Console.WriteLine("Zvol si sloupec, střelíš(0-9)");
+                    vertical = Console.ReadLine();
+                    if (int.TryParse(vertical, out col))
+                    {
+                        break;
+                    }
+                    Console.WriteLine("vstup je chybně");
+
+                }
+                if (col > 9)
+                {
+                    Console.WriteLine("Přečti si znovu zadání");
+                    continue;
+                }
+                while (true)
+                {
+                    Console.WriteLine("Zvol si řádek, kam střelíš(0-9)");
+                    horizontal = Console.ReadLine();
+                    if (int.TryParse(horizontal, out row))
+                    {
+                        break;
+                    }
+                    Console.WriteLine("vstup je chybně");
+
+                }
+
+                row = int.Parse(horizontal);
+                if (row > 9)
+                {
+                    Console.WriteLine("Přečti si znovu zadání");
+                    continue;
+                }
+
+
+                if (arrayPC[col, row] == 3)
+                {
+                    arrayShadow[col, row] = 5;
+                    arrayPC[col, row] = 5;
+                }
+                else if (arrayPC[col, row] == 0)
+                {
+                    arrayShadow[col, row] = 6;
+                    arrayPC[col, row] = 6;
+
+                }
+                else if (arrayPC[col, row] == 5)
+                {
+                    Console.WriteLine("Zasáhl jsi zasaženou loď. Mamlasi");
+                }
+                else if (arrayPC[col, row] == 6)
+                {
+                    Console.WriteLine("Tam už jsi střílel");
+                }
+
+                Console.Clear();
+                Console.WriteLine("Soupeřovo pole");
+                DrawField(arrayPC);
+                if (!CheckArray(arrayPC))
+                {
+                    break;
+                }
+
+
             }
-            
-                       
-
-
-
-            Console.ReadKey();
-
-            }
-        
-        
         }
+        
+    
+        static void Main(string[] args)
+        {
+            Console.WriteLine("VELKOLEPÁ HRA BITEVNÍCH LODÍ");
+            Console.WriteLine("Toto je moře, na kterém se hra odehrává");
+            int x = 0;
+            int y = 0;
+            bool rot = true;
+            string vertical=("");
+            int col=0;
+            string horizontal=("");
+            int row=0;
+            Random rnd = new Random();
+            int[,] array = new int[10, 10];
+            int[,] arrayPC = new int[10, 10];
+            int[,] arrayShadow = new int[10, 10];
+            SetArrayToDefault(array, arrayPC, arrayShadow);
+            DrawField(arrayPC);
+            Console.ReadKey();
+            Console.Clear();
+            Place3Ships(array,rot,x,y);// Náhodné rozmístění mých lodí
+            Thread.Sleep(600); // power napík            
+            Place3Ships(arrayPC, rot, x, y);//náhodné rozmístění soupeřových lodí
+            Console.WriteLine("Tvoje pole");
+            DrawField(array);
+            Console.WriteLine("soupeřovo pole (nevidíš ho)");
+            DrawField (arrayShadow);
+            Console.ReadKey();
+            playerShoot(arrayPC,arrayShadow,vertical,horizontal,col,row);
+
+            //JDEME STŘÍLET//
+         
+            Console.WriteLine("VYHRÁL JSI");
+            Console.ReadKey();
+            
+            
+        }
+         
     }
+}
