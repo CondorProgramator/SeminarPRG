@@ -67,7 +67,7 @@ namespace RealBattleShip
             }
         }
 
-
+        // Funkce pro ověření místa na umístění pole
         static bool CanPlaceShip(int[,] array, int x, int y, int length, bool isHorizontal)
         {
             if (isHorizontal)
@@ -110,7 +110,7 @@ namespace RealBattleShip
                 }
             }
         }
-
+        //Funkce pro umístění několoka loďí
         static void Place3Ships(int[,] array, bool rot, int x, int y)
         {
             Random rnd = new Random();
@@ -136,6 +136,8 @@ namespace RealBattleShip
                 }
             }
         }
+
+        //Plošná kontrola stavu pole
         static bool CheckArray(int[,] array)
         {
             for (int i = 0; i < array.GetLength(0); i++)
@@ -153,6 +155,7 @@ namespace RealBattleShip
             }
             return false;
         }
+        //Funkce umožňující střílet
         static void playerShoot(int[,] arrayPC,int [,]arrayShadow, string vertical, string horizontal, int col, int row)
         {
 
@@ -229,6 +232,7 @@ namespace RealBattleShip
 
             
         }
+        //Funkce která střílí na hráče
         static void pcShoot(int[,]array, int x, int y)
         {
         checkpoint:
@@ -253,8 +257,9 @@ namespace RealBattleShip
                 goto checkpoint;
             }
         }
-        
-    
+
+     
+
         static void Main(string[] args)
         {
             Console.WriteLine("VELKOLEPÁ HRA BITEVNÍCH LODÍ");
@@ -282,7 +287,9 @@ namespace RealBattleShip
             Console.WriteLine("Tvoje pole");
             DrawField(array);
             Console.ReadKey();
+          
 
+            // dokud jsou lodě bude se hrát
             while (CheckArray(arrayPC) == true ||CheckArray(array) == true)
             {
                 playerShoot(arrayPC, arrayShadow, vertical, horizontal, col, row);
