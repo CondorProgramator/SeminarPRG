@@ -290,7 +290,7 @@ namespace RealBattleShip
           
 
             // dokud jsou lodě bude se hrát
-            while (CheckArray(arrayPC) == true ||CheckArray(array) == true)
+            while (CheckArray(arrayPC) == true && CheckArray(array) == true)
             {
                 playerShoot(arrayPC, arrayShadow, vertical, horizontal, col, row);
                 pcShoot(array, x, y);
