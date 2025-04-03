@@ -155,7 +155,96 @@ namespace RealBattleShip
             }
             return false;
         }
-        //Funkce umožňující střílet
+        // Funkce pro střílení 3*3 bomb
+     /*   static void playerBigShoot(int[,] arrayPC, int[,] arrayShadow, string vertical, string horizontal, int col, int row)
+        {
+            while (true)
+            {
+
+
+                while (true)
+                {
+                    Console.WriteLine("Zvol si sloupec, střelíš 3*3 bombu(0-9)");
+                    vertical = Console.ReadLine();
+                    if (int.TryParse(vertical, out col))
+                    {
+                        break;
+                    }
+                    Console.WriteLine("vstup je chybně");
+
+                }
+                if (col > 9)
+                {
+                    Console.WriteLine("Přečti si znovu zadání");
+                    continue;
+
+                }
+                while (true)
+                {
+                    Console.WriteLine("Zvol si řádek, kam střelíš 3*3 bombu(0-9)");
+                    horizontal = Console.ReadLine();
+                    if (int.TryParse(horizontal, out row))
+                    {
+                        break;
+                    }
+                    Console.WriteLine("vstup je chybně");
+
+                }
+
+                row = int.Parse(horizontal);
+                if (row > 9)
+                {
+                    Console.WriteLine("Přečti si znovu zadání");
+                    continue;
+                }
+
+                for(int i = -1; i < 2; i++)
+            {
+                    col = int.Parse(horizontal);
+                    col = col + i;
+                    for (int j = -1; j < 2; j++)
+                    {
+                        if (arrayPC[col, row+j] == 3)
+                        {
+                            arrayShadow[col, row+j] = 5;
+                            arrayPC[col, row + j] = 5;
+                            break;
+                        }
+                        else if (arrayPC[col, row + j] == 0)
+                        {
+                            arrayShadow[col, row+j] = 6;
+                            arrayPC[col, row + j] = 6;
+                            break;
+
+                        }
+                        else if (arrayPC[col, row + j] == 5)
+                        {
+                            Console.WriteLine("Zasáhl jsi zasaženou loď. Mamlasi");
+                            break;
+                        }
+                        else if (arrayPC[col, row+j] == 6)
+                        {
+                            Console.WriteLine("Tam už jsi střílel");
+                            break;
+                        }
+
+
+                    }
+                    break;
+                }
+
+               
+
+                Console.Clear();
+                Console.WriteLine("Soupeřovo pole");
+                DrawField(arrayShadow);
+
+            }
+
+
+        }
+     */
+        //Funkce umožňující střílet normální střely
         static void playerShoot(int[,] arrayPC,int [,]arrayShadow, string vertical, string horizontal, int col, int row)
         {
 
